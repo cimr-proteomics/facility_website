@@ -1,0 +1,326 @@
+{% extends 'basefacility.html' %}
+
+{% block extrascript %}
+<script>
+</script>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h6 class="text-center"><strong><blue>USERS table</blue></strong></h6>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+<table style="width:100%; font-size:80%;" class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">user_ID</th>
+      <th scope="col">first_name</th>
+      <th scope="col">last_name</th>
+      <th scope="col">email</th>
+      <th scope="col">access_level</th>
+      <th scope="col">position</th>
+      <th scope="col">group_id</th>
+      <th scope="col">institute_name</th>
+      <th scope="col">institute_type</th>
+      <th scope="col">grant_codes</th>
+      <th scope="col">award_years</th>
+      <th scope="col">time_registered</th>
+      <th scope="col">authenticated</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in usrs %}
+    <tr>
+      {% for cell in entry %}
+        <td>{{ cell }}</td>
+	  {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h6 class="text-center"><strong><blue>EXPERIMENT REQUESTS table</blue></strong></h6>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+<div class="table-responsive">
+<table style="width:90%; font-size:80%;" class="table table-sm mx-auto">
+  <thead>
+    <tr>
+      <th scope="col">email</th>
+      <th scope="col">expt_code</th>
+      <th scope="col">key1</th>
+      <th scope="col">grant_code</th>
+      <th scope="col">expt_type</th>
+      <th scope="col">extra_notes</th>
+      <th scope="col">time_requested</th>
+      <th scope="col">arrived</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in ereqs %}
+    <tr>
+      {% for cell in entry %}
+        <td>{{ cell }}</td>
+	  {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h6 class="text-center"><strong><blue>SAMPLE REQUESTS table</blue></strong></h6>
+    </div>
+  </div>
+</div>
+
+<div class="container-fuild">
+<div class="table-responsive">
+  <table style="width:100%; font-size:80%;" class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">email</th>
+      <th scope="col">expt code</th>
+      <th scope="col">key1</th>
+      <th scope="col">sample code</th>
+      <th scope="col">key2</th>
+      <th scope="col">protein_conc</th>
+      <th scope="col">estm'd inject's</th>
+      <th scope="col">spare col</th>
+      <th scope="col">spare col</th>
+      <th scope="col">run gel</th>
+      <th scope="col">ingel digest</th>
+      <th scope="col">s_trap digest</th>
+      <th scope="col">insol digest</th>
+      <th scope="col">lysc digest</th>
+      <th scope="col">po4 enrich</th>
+      <th scope="col">label</th>
+      <th scope="col">fract'ate</th>
+      <th scope="col">intact protein</th>
+      <th scope="col">time requested</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in sreqs %}
+    <tr>
+      {% for cell in entry %}
+        <td>{{ cell }}</td>
+	  {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h6 class="text-center"><strong><blue>SAMPLE DETAILS table</blue></strong></h6>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+<table style="width:100%; font-size:80%;" class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">key1</th>
+      <th scope="col">key2</th>
+      <th scope="col">bench_methods</th>
+      <th scope="col">actual_injections</th>
+      <th scope="col">sparecol1</th>
+      <th scope="col">sparecol2</th>
+      <th scope="col">time_updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in sdets %}
+    <tr>
+      {% for cell in entry %}
+        <td>{{ cell }}</td>
+	  {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h6 class="text-center"><strong><blue>INSTRUMENT DETAILS table</blue></strong></h6>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+<table style="width:80%; font-size:80%;" class="table table-sm mx-auto">
+  <thead>
+    <tr>
+      <th scope="col">key1</th>
+      <th scope="col">method1</th>
+      <th scope="col">injections1</th>
+      <th scope="col">search1</th>
+      <th scope="col">washes1</th>
+      <th scope="col">method2</th>
+      <th scope="col">injections2</th>
+      <th scope="col">search2</th>
+      <th scope="col">washes2</th>
+      <th scope="col">method3</th>
+      <th scope="col">injections3</th>
+      <th scope="col">search3</th>
+      <th scope="col">washes3</th>
+      <th scope="col">method4</th>
+      <th scope="col">injections4</th>
+      <th scope="col">search4</th>
+      <th scope="col">washes4</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in idets %}
+    <tr>
+      {% for cell in entry %}
+        <td>{{ cell }}</td>
+	  {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h6 class="text-center"><strong><blue>BENCH HOURS table</blue></strong></h6>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+<table style="width:80%; font-size:80%;" class="table table-sm ms-5">
+  <thead>
+    <tr>
+      <th scope="col">key1</th>
+      <th scope="col">bench_hours</th>
+      <th scope="col">sparecol1</th>
+      <th scope="col">sparecol2</th>
+      <th scope="col">time_updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in bhrs %}
+    <tr>
+      {% for cell in entry %}
+        <td>{{ cell }}</td>
+	  {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h6 class="text-center"><strong><blue>DATA REQUESTS table</blue></strong></h6>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+<table style="width:80%; font-size:80%;" class="table table-sm ms-5">
+  <thead>
+    <tr>
+      <th scope="col">key1</th>
+      <th scope="col">python_hours</th>
+      <th scope="col">sparecol1</th>
+      <th scope="col">sparecol2</th>
+      <th scope="col">time_updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in dreqs %}
+    <tr>
+      {% for cell in entry %}
+        <td>{{ cell }}</td>
+	  {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h6 class="text-center"><strong><blue>EXPENSE SUMMARY table</blue></strong></h6>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+<table style="width:100%; font-size:80%;" class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">key1</th>
+      <th scope="col">grant_or_type </th>
+      <th scope="col">CU_early_discount</th>
+      <th scope="col">bench_cost</th>
+      <th scope="col">instrument_cost</th>
+      <th scope="col">wash_cost</th>
+      <th scope="col">dbsearch_cost</th>
+      <th scope="col">extras_description</th>
+      <th scope="col">extras_cost</th>
+      <th scope="col">Yr_instr_run</th>
+      <th scope="col">YrQ_instr_run</th>
+      <th scope="col">bench_instr_db_signoff</th>
+      <th scope="col">python_cost</th>
+      <th scope="col">YrQ_python_run</th>
+      <th scope="col">python_signoff</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    {% for entry in esum %}
+    <tr>
+      {% for cell in entry %}
+        <td>{{ cell }}</td>
+	  {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br>
+</div>
+
+
+{% endblock %}

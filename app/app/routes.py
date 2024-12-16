@@ -1800,7 +1800,7 @@ def request_progress_1():
 def request_progress_2(exptkey=None):
 
         if exptkey is not None:
-                print(exptkey)
+
                 exptkey, err = sanitize_batons(exptkey)
                 if err:
                         msg = 'there was a problem with this request, please try again'
@@ -1871,8 +1871,6 @@ def facility_home():
         
         #get these experiment categories lists for dropdowns menus
         allexpts, recentexpts, notarrexpts = get_expt_lists()
-
-        print(recentexpts)
 
         i_update, e_signoff, py_signoff, b_update, cmpd_unsgn_expts = expt_completion_status_categories() #funcs section
                 
@@ -3196,6 +3194,8 @@ def modify_experiment_2(exptkey=None):
 @admin_required
 def add_modify_users():
 
+        benchmins_dict, instrmins_dict, datamins_dict, permin_price_dict, institute_price_dict, instr_methods, bench_methods, institute_types, DB_categories = outer_dict_function(tablenames, col1s, col2s)
+        
         newest_id = get_newest_id() #funcs section
         template_page = 'add_modify_users.html' #not sure why I use this variable sometimes and not others. 
         

@@ -4,11 +4,11 @@
 
 This repository contains a python-based web application built using the Flask framework, which interacts with a mariaDB database using SQLAlchemcy. The app allows facility users to submit samples to the facility and track their progress. The app allows facility staff to summarize quarterly income, income sources, and other usage data such as experiment types, sample-prep time, data-analysis time.  
 
-This app reflects the pricing scheme of the faciltiy for which it was written. This facility accepts three main types fo request:  
+This app reflects the pricing scheme of the facility for which it was written. This facility accepts three main types fo request:  
 
 - samples requiring processing before injecting on to a mass spectrometer
 - samples ready to inject on to a mass spectrometer
-- data analysis requsts, usually involding some bespoke programming  
+- data analysis requests, usually involving some bespoke programming  
 
 Consequently, the app is built to record and calculates prices for four different activities:  
  - benchwork
@@ -21,7 +21,7 @@ Consequently, the app is built to record and calculates prices for four differen
  - Other university
  - Industry  
 
-This app is sectioned into different membership areas. The front pages have no access requirements. Other  pages require either User, Finance or Admin priviliges, for which a detailed explanation is given in the accompanying tutorial.  
+This app is sectioned into different membership areas. The front pages have no access requirements. Other  pages require either User, Finance or Admin privileges, for which a detailed explanation is given in the accompanying tutorial.  
 <br>
 
 ## Flask Application Structure
@@ -39,16 +39,16 @@ Note that some tables autofill with 2024 committee settings. Reinitiating DB wil
 **data_request** : 1ry key 'key 1'. Records users requests for bespoke data analysis, programming hours in-facility, plus spare columns for when Mike changes his mind.   
 **expenses_summary** : 1ry key 'key1'. Frgn key 'key1' to experiment_request.key1.   
 **experiment_request** : 1ry key 'email'. Frgn key 'key1' to users.email. Records meta-info for user requests. Initiating request triggers python function that fills downstream tables.  
-**institute_type**  1ry key 'institute_type'. No frgn key. @event.listens_for fills table with 3 types w 3 price adjustments. No option for addition type but can change price adustments.  
+**institute_type**  1ry key 'institute_type'. No frgn key. @event.listens_for fills table with 3 types w 3 price adjustments. No option for addition type but can change price adjustments.  
 **instrument_data_methods**  
-**instrument_details**  1ry key 'key1'. Frgn key 'key1' to experiment_request.key1. Filled by admin to show what methds, washes a sample was subject to on the instrument.  
+**instrument_details**  1ry key 'key1'. Frgn key 'key1' to experiment_request.key1. Filled by admin to show what methods, washes a sample was subject to on the instrument.  
 **instruments**  doesn't feature in app. included in anticipation of future requirement to set choices for instruments.   
-**price_per_min**  1ry key 'activity'. No frgn key. @event.listens_for fills table w 3 activities w 3 price settings. No option for addition activity but can change price adustments.  
+**price_per_min**  1ry key 'activity'. No frgn key. @event.listens_for fills table w 3 activities w 3 price settings. No option for addition activity but can change price adjustments.  
 **pwds**  table structure pre-set by flask_login requirements. 'id' column must exist, must be primary key, autoincrements. Relates to Users 'user_id' column. Pwds contains wrapper for password reset.  
 **sample_details**  1ry key 'key1'. Frgn key 'key1' to experiment_request.key1. Records in-facility benchwork, number instrument-injections generated (may be different from user-anticipated injections)  
 **sample_request**  1ry key 'key1'. Frgn key 'key1' to experiment_request.key1. Records detailed info for user requests involving samples.  
 **species**  1ry key 'species'. No frgn key. Accepts admin additions. Creates dropdown list for users to select database in expt request form.  
-**users**  1ry key 'email', not user_id. Contains user info. User_id is requirement of flask_login. Autoincrement removed; setting manually w function in routes.py prevents asynchroniscity w regist'n and login user-numbers.   
+**users**  1ry key 'email', not user_id. Contains user info. User_id is requirement of flask_login. Autoincrement removed; setting manually w function in routes.py prevents asynchronicity w regist'n and login user-numbers.   
 <br>  
 
 ### Keys and information levels:  
@@ -82,8 +82,7 @@ Before you continue, ensure you have met the following requirements:
 ### Dependencies
 
 See 'environment_Dec2024_from_test_env.yml' in this repository. Version numbers for flask, sqlalchemy, pandas, numpy, wekzeug (at least, probably more) are critical.  
-<br>
-<br>
+<br>  
 
 ### Configuration  
 
@@ -231,7 +230,7 @@ Load the app, db and db structure, switch to debug mode, then initialise the dat
   
 ## Testing 
 
-A dummy database and tutorial has been provided in this repository. The web app involves different access levels to different pages, with different page views inherited depending on the access level of the current user. It is important to test that all plots and finance spreadhseets are showing correctly, can be downloaded and retireved from the appropriate folder. It is recommended to familiarise yourself with the web app by following the tutorial. I can't guarantee every example in the tutorial will work as given - you may have to substitute your own example requests. Nonetheless, it is more than sufficient to discover all the features of this web app. The individuals mentioned in the tutorial refer to staff members of the facility for whom I wrote this app, in case you're wondering. 
+A dummy database and tutorial has been provided in this repository. The web app involves different access levels to different pages, with different page views inherited depending on the access level of the current user. It is important to test that all plots and finance spreadsheets are showing correctly, can be downloaded and retrieved from the appropriate folder. It is recommended to familiarise yourself with the web app by following the tutorial. I can't guarantee every example in the tutorial will work as given - you may have to substitute your own example requests. Nonetheless, it is more than sufficient to discover all the features of this web app. The individuals mentioned in the tutorial refer to staff members of the facility for whom I wrote this app, in case you're wondering. 
 <br>  
 
 ## Remote Deployment  
@@ -243,7 +242,7 @@ Local vs Remote deployment is controlled by 'if...else' statement in __init\__.p
 Set email1 (facility email), authorised_for_data_signoff (facility bioinformatician) and authorised_for_instrument_signoff (facility manager) as appropriate.  
 
 **Accessing downloaded files, uploading files to the group data areas:**  
-No upload mechanism has been written into the app, intentionally. Facility staff copy results files into the relevanr group's 'recent data' directories using Filezilla. Files are automatically transferred to 'old data' directories after 8 weeks. After 3 months, files are automatically deleted. Manual intervention is required if the server runs out of space before then. Files downloaded from Facility Stats and Finances pages go the self-named folders in the 'facility' directory; all finance and admin staff will need appropriate permissions. 
+No upload mechanism has been written into the app, intentionally. Facility staff copy results files into the relevant group's 'recent data' directories using Filezilla. Files are automatically transferred to 'old data' directories after 8 weeks. After 3 months, files are automatically deleted. Manual intervention is required if the server runs out of space before then. Files downloaded from Facility Stats and Finances pages go the self-named folders in the 'facility' directory; all finance and admin staff will need appropriate permissions. 
 The **injection lists** folder contains text files, listed by owner initials and expt code, of all injections associated with an experiment. This folder should be visible on the desktop of all mass spec instrument computers, to facilitate correct file naming by facility staff.  
 
 **Deployment as a update to a previous app version**  
@@ -252,18 +251,31 @@ The **injection lists** folder contains text files, listed by owner initials and
 
 ## Code style and standards  
 
-The relationships between these tables may seem very basic to an SQLAlchemy user. I knew only rudimentary SQL and no SQLAlchemy when I started this. But it's just enough for it to work.  
-An experienced web-developer may well want to change the relationship structures! 
+This webapp uses:  SQL, SQLalchemy, python, jinja2, javascript and html.  
 
-## Contribution Guidelines
+RESTful APIs are used frequently throughout routes.py to transfer user-expt keys, and other dictionary keys, between pages. Retrospectively, using JSON, JQuery and AJAX would have been appropriate in some, circumstances but I didn't know about this until later, hence the heavy reliance on RESTful APIs.  
 
-## License information
+There is no CSS file to go with this app; styles are mostly written into the <style></style> section of the base templates for External, User and Finance/Facility pages that are inherited by the other hmtl pages. Occasionally, style formats will be specified inline on the hmtl page.  
+
+Javascript functions are found in the <script></script> sections in the relevant html pages; there si no external javascript file.  
+
+I have not used any nameable python code standard in routes.py, other than keep it as pythonic as I can within the remit of my experience and not to have too many characters per line.  
+
+Database queries make use of the SQLalchemy Object Relational Mapper (ORM) in the app. The only exception to this is in the 'facility_stats_2' function where raw sql queries are combined with the pandas 'read_sql_query' method. The relationships between these tables may seem very basic to an SQLAlchemy user. I knew only rudimentary SQL and no SQLAlchemy when I started this. But it's just enough for it to work. An experienced web-developer may well want to change the relationship structures! 
+
+## Contribution Guidelines  
+
+This webapp and database was written during a fixed-term contract by a novice programmer who's prior experience in web development consisted of a single, static page of html that showed an image of a greenfinch. It's a heroic effort in relative terms but in the absolute terms through which user-experience should be viewed, there's scope for improvement. Please take a look at the CONTRIBUTIONS.md file for more details.  
+
+## License information  
+
+This app was published in December 2024 by Harriet Parsons, under a GNU General Public License. 
 
 ## Contributors and acknowledgements  
 
-This app was written by Harriet Parsons (github.com/tempeparsons) with contributions from Tim Stevens (github.com/tjs23), particularly regarding the addition/deletion of rows in the request form, introducing me to javascript via the cascading dropdown menus found throughout the app, explaining the bascis of jinja templating and wrapper functions. 
+This app was written by Harriet Parsons (github.com/tempeparsons) with contributions from Tim Stevens (github.com/tjs23), who wrote the function for addition/deletion of rows in the request form, introduced me to javascript via the cascading dropdown menus found throughout the app, and explained to me the basics of jinja templating, RESTful APIs and wrapper functions. 
 <br>  
-I would like to acknowledge all those who completed the testing protocol, as well as Nic Mitchell and Jonathan Wilson for enabling the remote hosting of this webapp. Finally, I would like to thiank Tim for giving the moral and technical support I needed for completing such a technically advanced task as a novice programmer with no prior web-development experience.  
+I would like to acknowledge all those who completed the testing protocol, as well as Nic Mitchell and Jonathan Wilson for enabling the remote hosting of this webapp. Finally, I would like to thank Tim for giving the moral and technical support I needed for completing such a technically advanced task as a novice programmer with no prior web-development experience.  
 
 
 

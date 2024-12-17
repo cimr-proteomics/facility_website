@@ -196,7 +196,7 @@ def get_time_start_end(baton):
         return start, end
 
 
-###  function for getting everything out fo table for 'query DB pages'  ###
+###  function for getting everything out of table for 'query DB 1 pages'  ###
 
 def table_contents_getter(TableName):
         col_names = TableName.__table__.columns.keys()
@@ -208,6 +208,32 @@ def table_contents_getter(TableName):
                 tablerows.append(tablerow)
 
         return col_names, tablerows
+
+
+
+###  function for getting everything out of table for query DB 2 and 3 pages  ###
+
+def user_contents_getter(TableName, email, exptkey):
+
+        col_names = TableName.__table__.columns.keys()
+        query = []
+        
+        if TableName == Users:
+                query = db.session.query(TableName).filter(TableName.email.contains(f'{email}')).all()
+
+        if TableName != Users:
+                if not exptkey:
+                        query = db.session.query(TableName).filter(TableName.key1.contains(f'{email}')).all()
+                if exptkey:
+                        query = db.session.query(TableName).filter(TableName.key1.contains(f'{exptkey}')).all()
+               
+        tablerows = []
+        for n in list(range(len(query))):
+                tablerow = ([getattr(query[n], name) for name in col_names])
+                tablerows.append(tablerow)
+
+        return col_names, tablerows
+
 
 
 ###   function that make dictionaries from tables   ###
@@ -1829,7 +1855,11 @@ def request_progress_2(exptkey=None):
                 table_rows = []
                 
                 for idx, res in enumerate(q1):
-                        table_row = [res.sample_code, res.protein_conc, res.est_injections, method_string_per_sample[idx]]
+                        table_row = []
+                        if len(method_string_per_sample) > 0:
+                                table_row = [res.sample_code, res.protein_conc, res.est_injections, method_string_per_sample[idx]]
+                        else:
+                                table_row = [res.sample_code, res.protein_conc, res.est_injections]
                         q2 = db.session.query(SampleDetails).with_entities(SampleDetails.bench_methods, SampleDetails.actual_injections).where(SampleDetails.key2==res.key2).first()
                         table_row.append(q2.bench_methods)
                         table_row.append(q2.actual_injections)
@@ -2078,7 +2108,7 @@ def request_view(exptkey=None):
                 #all code until POST is setting variables to be displayed on request-view page
                 fn, ln, gid, itype, email = get_user_details(exptkey)
                 
-                query = db.session.query(SampleRequest).filter_by(key1=exptkey).all()
+                q1 = db.session.query(SampleRequest).filter_by(key1=exptkey).all()
 
 
                 #make 2nd (nested) list from lots of sample-level info from sample reqs table
@@ -2091,13 +2121,16 @@ def request_view(exptkey=None):
 
                 table_rows = []
                 
-                q1 = db.session.query(SampleRequest).filter_by(key1=exptkey).all()
                 for idx, res in enumerate(q1):
-                        table_row = [res.sample_code, res.protein_conc, res.est_injections, method_string_per_sample[idx]]
+                        table_row = []
+                        if len(method_string_per_sample) > 0:
+                                table_row = [res.sample_code, res.protein_conc, res.est_injections, method_string_per_sample[idx]]
+                        else:
+                                table_row = [res.sample_code, res.protein_conc, res.est_injections]
                         q2 = db.session.query(SampleDetails).with_entities(SampleDetails.bench_methods, SampleDetails.actual_injections).where(SampleDetails.key2==res.key2).first()
                         table_row.append(q2.bench_methods)
                         table_row.append(q2.actual_injections)
-                        table_rows.append(table_row) 
+                        table_rows.append(table_row)
 
                 ecode, etype, ecat, dbcat, gc, enotes, reqdt, db_yn = get_experiment_details(exptkey) #funcs section
 
@@ -3639,33 +3672,23 @@ def queryDB_2(em=None):
                         msg = 'there was a problem with this request, please try again'
 
                 #all poss lookups with an email
-                q1 = db.session.query(Users).filter_by(email=em).all()
-                usrs = user_table(q1)
 
-                q2 = db.session.query(ExperimentRequest).filter_by(email=em).all()
-                ereqs = ereqs_table(q2)
-                
-                q3 = db.session.query(SampleRequest).filter_by(email=em).all()
-                sreqs = sreqs_table(q3)
-                
-                q4 = db.session.query(SampleDetails).filter(SampleDetails.key1.contains(f'{em}')).all()
-                sdets = sdets_table(q4)
-                
-                q5 = db.session.query(InstrumentDetails).filter(InstrumentDetails.key1.contains(f'{em}')).all()
-                idets = idets_table(q5)
-                
-                q6 = db.session.query(BenchHours).filter(BenchHours.key1.contains(f'{em}')).all()
-                bhrs = bhrs_table(q6)
-                
-                q7 = db.session.query(DataRequest).filter(DataRequest.key1.contains(f'{em}')).all()
-                dreqs = dreqs_table(q7)
-                
-                q8 = db.session.query(ExpensesSummary).filter(ExpensesSummary.key1.contains(f'{em}')).all()
-                esum = esum_table(q8)
+                db_tables_list = [Users, ExperimentRequest,SampleRequest, SampleDetails,
+                                  InstrumentDetails, BenchHours,DataRequest, ExpensesSummary]
 
+                exptkey = None
+                results = []
+                for table in db_tables_list:
+                        tbl_head, tbl_rows = user_contents_getter(table, em, exptkey)
+                        tbl_results = [tbl_head, tbl_rows]
+                        results.append(tbl_results)
+
+                usrs, ereqs, sreqs, sdets, idets, bhrs, dreqs, esum = results
+                
                 return render_template('queryDB_2.html', usrs=usrs, ereqs=ereqs, sreqs=sreqs, sdets=sdets, idets=idets, bhrs=bhrs, dreqs=dreqs, esum=esum)
 
         return render_template('queryDB_2.html')
+
 
 
 @app.route('/queryDB_3', methods = ['GET', 'POST'])
@@ -3681,30 +3704,18 @@ def queryDB_3(exptkey=None):
 
                 em = exptkey.split('*')[0]
 
-                q1 = db.session.query(Users).filter_by(email=em).all()
-                usrs = user_table(q1)
+                db_tables_list = [Users, ExperimentRequest,SampleRequest, SampleDetails,
+                                  InstrumentDetails, BenchHours,DataRequest, ExpensesSummary]
 
-                #multiple users can choose the same ecode, so query by key rather than ecode
-                q2 = db.session.query(ExperimentRequest).filter_by(key1=exptkey).all()
-                ereqs = ereqs_table(q2)
-                
-                q3 = db.session.query(SampleRequest).filter_by(key1=exptkey).all()
-                sreqs = sreqs_table(q3)
-                
-                q4 = db.session.query(SampleDetails).filter_by(key1=exptkey).all()
-                sdets = sdets_table(q4)
-                
-                q5 = db.session.query(InstrumentDetails).filter_by(key1=exptkey).all()
-                idets = idets_table(q5)
-                
-                q6 = db.session.query(BenchHours).filter_by(key1=exptkey).all()
-                bhrs = bhrs_table(q6)
-                
-                q7 = db.session.query(DataRequest).filter_by(key1=exptkey).all()
-                dreqs = dreqs_table(q7)
-                
-                q8 = db.session.query(ExpensesSummary).filter_by(key1=exptkey).all()
-                esum = esum_table(q8)
+                #all poss lookups with an email
+
+                results = []
+                for table in db_tables_list:
+                        tbl_head, tbl_rows = user_contents_getter(table, em, exptkey)
+                        tbl_results = [tbl_head, tbl_rows]
+                        results.append(tbl_results)
+
+                usrs, ereqs, sreqs, sdets, idets, bhrs, dreqs, esum = results
 
                 return render_template('queryDB_3.html', usrs=usrs, ereqs=ereqs, sreqs=sreqs, sdets=sdets, idets=idets, bhrs=bhrs, dreqs=dreqs, esum=esum)
 
